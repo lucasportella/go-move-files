@@ -1,4 +1,4 @@
 {
-  "download_dir:": "c:/Users/john/Downloads",
-  "test": "c:/Users/john/Images"
+  "src_dir": "c:/Users/john/Downloads",
+  "dst_dir": "c:/Users/john/Documents"
 }

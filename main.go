@@ -2,9 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"runtime"
 	"strings"
 )
@@ -14,7 +14,8 @@ func main() {
 	if getUserOS() == "windows" {
 		paths = fixWindowsSlashes(paths)
 	}
-	fmt.Println(paths)
+	moveFiles(paths)
+
 }
 
 func getUserOS() string {
@@ -47,4 +48,26 @@ func getPaths() map[string]string {
 		log.Fatalf("Error parsing JSON file: %v", err)
 	}
 	return paths
+}
+
+func moveFiles(paths map[string]string) {
+	srcPath := paths["src_dir"]
+	dstPath := paths["dst_dir"]
+	src, err := os.Open(srcPath)
+	if err != nil {
+		log.Fatalf("Fatal! Could not open source directory. Error: %v", err)
+	}
+	defer src.Close()
+
+	files, err := src.ReadDir(-1)
+
+	if err != nil {
+		log.Fatalf("Fatal! Could not read source directory. Error: %v", err)
+	}
+
+	for _, file := range files {
+		if strings.HasPrefix(file.Name(), "test") {
+			os.Rename(srcPath+"\\"+file.Name(), dstPath+"\\"+file.Name())
+		}
+	}
 }
