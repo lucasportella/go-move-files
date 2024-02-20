@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"strings"
 
 	types "github.com/lucasportella/go-move-files/types"
 	utils "github.com/lucasportella/go-move-files/utils"
 )
-
-
 
 func main() {
 	paths := getPaths()
@@ -22,7 +22,6 @@ func main() {
 			}
 		}
 	}
-	// moveFiles(paths)
 
 }
 
@@ -34,37 +33,38 @@ func getPaths() types.Paths {
 	return paths
 }
 
-// func moveFiles(paths types.Paths, pathKey string) {
-// 	srcPath := paths[pathKey]["src_dir"]
-// 	dstPath := paths["dst_dir"]
-// 	src, err := os.Open(srcPath)
-
-// 	if err != nil {
-// 		log.Fatalf("Fatal! Could not open source directory. Error: %v", err)
-// 	}
-// 	defer src.Close()
-
-// 	files, err := src.ReadDir(-1)
-
-// 	if err != nil {
-// 		log.Fatalf("Fatal! Could not read source directory. Error: %v", err)
-// 	}
-
-// 	for _, file := range files {
-// 		if strings.HasPrefix(file.Name(), "test") {
-// 			os.Rename(srcPath+"/"+file.Name(), dstPath+"/"+file.Name())
-// 		}
-// 	}
-// }
-
 func WalkThroughPaths(paths types.Paths) {
 
 }
 
-func moveFilesDefault(key string, mapPaths types.InnerPaths) {
+func moveFilesDefault(key string, innerPaths types.InnerPaths) {
 	fmt.Println("moveFilesDefault called!")
+	srcPath := innerPaths.Src_dir
+	dstPath := innerPaths.Dst_dir
+	src, err := os.Open(srcPath)
+
+	if err != nil {
+		log.Fatalf("Fatal! Could not open source directory. Error: %v", err)
+	}
+	defer src.Close()
+
+	files, err := src.ReadDir(-1)
+
+	if err != nil {
+		log.Fatalf("Fatal! Could not read source directory. Error: %v", err)
+	}
+
+	for _, file := range files {
+
+		if strings.HasPrefix(file.Name(), key) {
+			err := os.Rename(srcPath+"/"+file.Name(), dstPath+"/"+file.Name())
+			if err != nil {
+				fmt.Printf("Error while moving file: %v", err)
+			}
+		}
+	}
 }
 
-func moveFilesWithDate(key string, mapPaths types.InnerPaths) {
+func moveFilesWithDate(key string, innerPaths types.InnerPaths) {
 	fmt.Println("moveFilesWithDate called!")
 }
