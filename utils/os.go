@@ -2,16 +2,18 @@ package utils
 
 import (
 	"encoding/json"
-	"os"
 	"log"
+	"os"
 	"runtime"
+
+	types "github.com/lucasportella/go-move-files/types"
 )
 
 func GetUserOS() string {
 	return runtime.GOOS
 }
 
-func ReadJSONFile() (map[string]string, error) {
+func ReadJSONFile() (types.Paths, error) {
 	filePath := "paths.json"
 
 	jsonPaths, err := os.ReadFile(filePath)
@@ -19,7 +21,7 @@ func ReadJSONFile() (map[string]string, error) {
 		log.Fatalf("Error reading the JSON file: %v", err)
 	}
 
-	var paths map[string]string
+	var paths types.Paths
 	err = json.Unmarshal(jsonPaths, &paths)
 	if err != nil {
 		log.Fatalf("Error parsing JSON file: %v", err)
