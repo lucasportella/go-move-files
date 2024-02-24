@@ -15,7 +15,6 @@ func MoveFilesDefault(key string, innerPaths types.InnerPaths) {
 
 	files := ReadFilesFromSrcDir(srcPath)
 
-	//loop through src dir files
 	for _, file := range files {
 
 		//openFile in the src dir
@@ -24,7 +23,6 @@ func MoveFilesDefault(key string, innerPaths types.InnerPaths) {
 		if err != nil {
 			log.Printf("Error while opening the file using the old path. Path: %v", oldFilePath)
 		}
-		defer srcFile.Close()
 
 		// create file in dst dir if file matches the key
 		newFilePath := dstPath + "/" + file.Name()
@@ -35,8 +33,10 @@ func MoveFilesDefault(key string, innerPaths types.InnerPaths) {
 				dstFile.Close()
 				continue
 			}
-			defer dstFile.Close()
+
 			err = MoveFile(dstFile, srcFile)
+			srcFile.Close()
+			dstFile.Close()
 			if err != nil {
 				DeleteFile(newFilePath)
 			} else {

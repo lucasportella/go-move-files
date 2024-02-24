@@ -55,8 +55,6 @@ func DeleteFile(filePath string) {
 }
 
 func MoveFile(dstFile *os.File, srcFile *os.File) error {
-	// copy the file from src to dst and delete src file if success or delete dst file if fails
 	_, err := io.Copy(dstFile, srcFile)
-	srcFile.Close()
 	return err
 }
