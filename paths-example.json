@@ -1,4 +1,34 @@
 {
-  "src_dir": "c:/Users/john/Downloads",
-  "dst_dir": "c:/Users/john/Documents"
+  "default": {
+    "test#": {
+      "src_dir": "C:/Users/john/Pictures",
+      "dst_dir": "C:/Users/john/Videos"
+    },
+    "book#": {
+      "src_dir": "C:/Users/john/Downloads",
+      "dst_dir": "C:/Users/john/Videos"
+    },
+    "music#": {
+      "src_dir": "C:/Users/john/Pictures",
+      "dst_dir": "C:/Users/john/Videos"
+    },
+    "picture#": {
+      "src_dir": "C:/Users/john/Pictures",
+      "dst_dir": "C:/Users/john/Videos"
+    }
+  },
+  "withDate": {
+    "bill#": {
+      "src_dir": "C:/Users/john/Pictures",
+      "dst_dir": "C:/Users/john/Videos"
+    },
+    "doc#": {
+      "src_dir": "C:/Users/john/Pictures",
+      "dst_dir": "C:/Users/john/Videos"
+    }
+  },
+  "delete": {
+    "src_dir": "C:/Users/john/Downloads"
+  }
+
 }
