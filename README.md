@@ -3,7 +3,7 @@
 
 ### The Problem
 - People who organize several files in their systems might spend too much time saving the same docs and monthly bills from their Downloads folder to the desired folder. This project aims the save time by reading some specific key in the file name and moving it automatically to the user desired path.
-- Once the user set the desired paths in the json, it will only have the burden of when saving a file, in the moment he will name it, he will have to add the key name.
+- Once the user set the desired paths in the json, he will only have the burden of when saving a file, in the naming moment, he will have to add the key name. In the file paths-example.json I used *key#filename* pattern. But it can be any other string, user just should be careful to avoid ambiguity.
 
 - It is possible to analyze the content and headers of the file, but that will be for the future.
 
