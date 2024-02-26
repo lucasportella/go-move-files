@@ -13,6 +13,10 @@
 ### Options:
 - 1 **Default**: Simply move file x to destination y.
 - 2 **With Date**: Get file date and create/move to folder accordingly to the year/month/day *Not yet implemented*
+  - Configs:
+    - Daily: will save in the following folder: key/year/month/day
+    - Monthly: will save in the following folder: key/year/month
+    - Yearly: will save in the following folder: key/year
 - 3 **Delete**: Simply delete file from src path. Useful for some cases where extensions automatically write in the Downloads folder since they can't have access to user OS. *Not yet implemented*
 
 *support to folders not yet implemented*

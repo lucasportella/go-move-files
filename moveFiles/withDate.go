@@ -1,6 +1,7 @@
 package movefiles
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -37,14 +38,44 @@ func MoveFilesWithDate(key string, innerPaths types.InnerPaths) {
 func GetFileDate(path string) (string, error) {
 	fileInfo, err := os.Stat(path)
 	if err != nil {
-		log.Fatalf("Error while getting data from the following file: %v", path)
-		return "", err
+		return "", fmt.Errorf("error while getting data from the following file: %v", path)
 	}
 	formattedTime := fileInfo.ModTime().Format(time.RFC3339)
 	relevantTime := strings.Split(formattedTime, "T")[0]
 	return relevantTime, nil
 }
 
-func CreateDateFolders(key string) {
-	
+// verify if correct folder exists
+// if exists create it, if not, do nothing
+// update newFilePath
+// moveFile
+func GetDatePaths(key string, config string, path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := CreateDateFolders(path)
+		if err != nil {
+			return fmt.Errorf("failed to create folder(s): %v", err)
+		}
+	} else if err != nil {
+		return fmt.Errorf("error while checking folder existence: %v", err)
+	}
+	return nil
+}
+
+func CreateDateFolders(path string) error {
+	err := os.MkdirAll(path, 0755)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func CheckIfFolderExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
