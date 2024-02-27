@@ -28,8 +28,22 @@ func GetNewPathWithDate(path string, dateConfig types.DateValues) string {
 	return newPathWithDate
 }
 
-func BuildNewFilePath(file fs.DirEntry) {
-
+func BuildNewFilePath(file fs.DirEntry, srcPath string, dstPath string) (string, error) {
+	oldFilePath := srcPath + "/" + file.Name()
+	fileDate, err := GetFileDate(oldFilePath)
+	if err != nil {
+		log.Printf("Error while getting the date file of %v. Error: %v\n", file.Name(), err)
+		return "", err
+	}
+	defaultDateConfig := GetDateConfig(fileDate)
+	dateConfig, err := SetDateConfig(defaultDateConfig, "monthly")
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	newPathWithDate := GetNewPathWithDate(dstPath, dateConfig)
+	finalFilePath := newPathWithDate + "/" + file.Name()
+	return finalFilePath, nil
 }
 
 func MoveFilesWithDate(configuration types.Configuration) {
@@ -41,26 +55,18 @@ func MoveFilesWithDate(configuration types.Configuration) {
 
 	for _, paths := range datePaths.WithDateMonthly {
 		srcPath := paths.SrcDir
-		// dstpath := paths.DstDir
+		dstPath := paths.DstDir
 
 		srcDir := ReadFilesFromSrcDir(srcPath)
 
 		for _, file := range srcDir {
-			newFilePathWithoutDate := srcPath + "/" + file.Name()
-			fileDate, err := GetFileDate(newFilePathWithoutDate)
-			if err != nil {
-				log.Printf("Error while getting the date file of %v. Error: %v\n", file.Name(), err)
-				continue
-			}
-			defaultDateConfig := GetDateConfig(fileDate)
-			dateConfig, err := SetDateConfig(defaultDateConfig, "monthly")
+			newFilePath, err := BuildNewFilePath(file, srcPath, dstPath)
 			if err != nil {
 				log.Println(err)
 				continue
 			}
-			newPathWithDate := GetNewPathWithDate(srcPath, dateConfig)
-			finalFilePath := newPathWithDate + "/" + file.Name()
-			fmt.Println(finalFilePath)
+			fmt.Println(newFilePath)
+			// MoveFile(newFilePath, srcPath)
 		}
 
 	}
