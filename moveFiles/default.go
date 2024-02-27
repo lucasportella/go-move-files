@@ -8,10 +8,10 @@ import (
 	"github.com/lucasportella/go-move-files/types"
 )
 
-func MoveFilesDefault(key string, innerPaths types.InnerPaths) {
+func MoveFilesDefault(key string, paths types.Paths) {
 	// get paths from json
-	srcPath := innerPaths.Src_dir
-	dstPath := innerPaths.Dst_dir
+	srcPath := paths.SrcDir
+	dstPath := paths.DstDir
 
 	files := ReadFilesFromSrcDir(srcPath)
 
@@ -26,7 +26,7 @@ func MoveFilesDefault(key string, innerPaths types.InnerPaths) {
 
 		// create file in dst dir if file matches the key
 		newFilePath := dstPath + "/" + file.Name()
-		if strings.HasPrefix(file.Name(), key) {
+		if strings.Contains(strings.ToLower(file.Name()), strings.ToLower(key)) {
 			dstFile, err := os.Create(newFilePath)
 			if err != nil {
 				log.Printf("Error while creating file in destiny folder: %v\n", err)
