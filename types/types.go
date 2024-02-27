@@ -1,8 +1,22 @@
 package types
 
-type InnerPaths struct {
-	Src_dir string
-	Dst_dir string
+type Configuration struct {
+	Default  map[string]Paths       `json:"default"`
+	WithDate DatePaths              `json:"withDate"`
+	Delete   map[string]DeletePaths `json:"delete"`
 }
 
-type Paths map[string]map[string]InnerPaths
+type Paths struct {
+	SrcDir string `json:"src_dir"`
+	DstDir string `json:"dst_dir"`
+}
+
+type DatePaths struct {
+	WithDateDaily   map[string]Paths `json:"withDateDaily"`
+	WithDateMonthly map[string]Paths `json:"withDateMonthly"`
+	WithDateYearly  map[string]Paths `json:"withDateYearly"`
+}
+
+type DeletePaths struct {
+	SrcDir string `json:"src_dir"`
+}
