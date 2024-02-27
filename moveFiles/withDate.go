@@ -2,6 +2,7 @@ package movefiles
 
 import (
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
 	"strings"
@@ -25,6 +26,10 @@ func GetNewPathWithDate(path string, dateConfig types.DateValues) string {
 		newPathWithDate += "/" + day
 	}
 	return newPathWithDate
+}
+
+func BuildNewFilePath(file fs.DirEntry) {
+
 }
 
 func MoveFilesWithDate(configuration types.Configuration) {
@@ -53,8 +58,9 @@ func MoveFilesWithDate(configuration types.Configuration) {
 				log.Println(err)
 				continue
 			}
-			newFilePathWithDate := GetNewPathWithDate(newFilePathWithoutDate, dateConfig)
-			fmt.Println(newFilePathWithDate)
+			newPathWithDate := GetNewPathWithDate(srcPath, dateConfig)
+			finalFilePath := newPathWithDate + "/" + file.Name()
+			fmt.Println(finalFilePath)
 		}
 
 	}
