@@ -19,4 +19,9 @@
     - Yearly: will save in the following folder: key/year
 - 3 **Delete**: Simply delete file from src path. Useful for some cases where extensions automatically write in the Downloads folder since they can't have access to user OS. *Not yet implemented*
 
+roadmap:
+*with date*
+*delete*
 *support to folders not yet implemented*
+*add retry operations*
+*tests*
