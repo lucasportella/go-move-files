@@ -69,11 +69,6 @@ func MoveFilesWithDate(configuration types.Configuration) {
 				SrcDir: srcPath,
 				DstDir: newPathWithDate,
 			}
-			err = GetDatePaths(newPathWithDate)
-			if err != nil {
-				log.Println(err)
-				continue
-			}
 			BuildDstFilePath(file, updatedPaths, key)
 		}
 
@@ -117,10 +112,6 @@ func GetFileDate(path string) (string, error) {
 	return relevantTime, nil
 }
 
-// verify if correct folder exists -- done
-// if exists create it, if not, do nothing
-// update newFilePath
-// moveFile
 func GetDatePaths(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		err := CreateDateFolders(path)
@@ -132,6 +123,8 @@ func GetDatePaths(path string) error {
 	}
 	return nil
 }
+
+
 
 func CreateDateFolders(path string) error {
 	err := os.MkdirAll(path, 0755)
