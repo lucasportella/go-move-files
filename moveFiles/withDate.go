@@ -13,14 +13,17 @@ import (
 
 func GetNewPathWithDate(path string, dateConfig types.DateValues) string {
 	newPathWithDate := path
+
 	year := dateConfig.GetYear()
 	if year != "" {
 		newPathWithDate += "/" + year
 	}
+
 	month := dateConfig.GetMonth()
 	if month != "" {
 		newPathWithDate += "/" + month
 	}
+
 	day := dateConfig.GetDay()
 	if day != "" {
 		newPathWithDate += "/" + day
@@ -28,7 +31,7 @@ func GetNewPathWithDate(path string, dateConfig types.DateValues) string {
 	return newPathWithDate
 }
 
-func BuildNewFilePath(file fs.DirEntry, srcPath string, dstPath string) (string, error) {
+func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string) (string, error) {
 	oldFilePath := srcPath + "/" + file.Name()
 	fileDate, err := GetFileDate(oldFilePath)
 	if err != nil {
@@ -42,8 +45,7 @@ func BuildNewFilePath(file fs.DirEntry, srcPath string, dstPath string) (string,
 		return "", err
 	}
 	newPathWithDate := GetNewPathWithDate(dstPath, dateConfig)
-	finalFilePath := newPathWithDate + "/" + file.Name()
-	return finalFilePath, nil
+	return newPathWithDate, nil
 }
 
 func MoveFilesWithDate(configuration types.Configuration) {
@@ -53,20 +55,26 @@ func MoveFilesWithDate(configuration types.Configuration) {
 	// 	dstpath := paths.DstDir
 	// }
 
-	for _, paths := range datePaths.WithDateMonthly {
+	for key, paths := range datePaths.WithDateMonthly {
 		srcPath := paths.SrcDir
-		dstPath := paths.DstDir
-
 		srcDir := ReadFilesFromSrcDir(srcPath)
-
 		for _, file := range srcDir {
-			newFilePath, err := BuildNewFilePath(file, srcPath, dstPath)
+			dstPath := paths.DstDir
+			newPathWithDate, err := BuildNewPathWithDate(file, srcPath, dstPath)
 			if err != nil {
 				log.Println(err)
 				continue
 			}
-			fmt.Println(newFilePath)
-			// MoveFile(newFilePath, srcPath)
+			updatedPaths := types.Paths{
+				SrcDir: srcPath,
+				DstDir: newPathWithDate,
+			}
+			err = GetDatePaths(newPathWithDate)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			BuildDstFilePath(file, updatedPaths, key)
 		}
 
 	}
@@ -113,14 +121,14 @@ func GetFileDate(path string) (string, error) {
 // if exists create it, if not, do nothing
 // update newFilePath
 // moveFile
-func GetDatePaths(key string, config string, path string) error {
+func GetDatePaths(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		err := CreateDateFolders(path)
 		if err != nil {
-			return fmt.Errorf("failed to create folder(s): %v\n", err)
+			return fmt.Errorf("failed to create folder(s): %v", err)
 		}
 	} else if err != nil {
-		return fmt.Errorf("error while checking folder existence: %v\n", err)
+		return fmt.Errorf("error while checking folder existence: %v", err)
 	}
 	return nil
 }
