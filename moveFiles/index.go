@@ -19,13 +19,8 @@ func GetPaths() types.Configuration {
 }
 
 func MoveFiles(configuration types.Configuration) {
-	for key, paths := range configuration.Default {
-		MoveFilesDefault(key, paths)
-	}
-
-		MoveFilesWithDate(configuration)
-
-
+	MoveFilesDefault(configuration)
+	MoveFilesWithDate(configuration)
 }
 
 func ReadFilesFromSrcDir(srcPath string) []fs.DirEntry {
@@ -55,4 +50,11 @@ func MoveFile(dstFile *os.File, srcFile *os.File) error {
 	_, err := io.Copy(dstFile, srcFile)
 	//fix: add delete fn here
 	return err
+}
+
+func PathExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }

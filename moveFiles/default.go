@@ -22,6 +22,7 @@ func BuildDstFilePath(file fs.DirEntry, paths types.Paths, key string) error {
 	// create file in dst dir if file matches the key
 	newFilePath := dstPath + "/" + file.Name()
 	if strings.Contains(strings.ToLower(file.Name()), strings.ToLower(key)) {
+		
 		dstFile, err := os.Create(newFilePath)
 		if err != nil {
 			log.Printf("Error while creating file in destiny folder: %v\n", err)
@@ -41,12 +42,11 @@ func BuildDstFilePath(file fs.DirEntry, paths types.Paths, key string) error {
 	return nil
 }
 
-func MoveFilesDefault(key string, paths types.Paths) {
-
-	files := ReadFilesFromSrcDir(paths.SrcDir)
-
-	for _, file := range files {
-		BuildDstFilePath(file, paths, key)
-
+func MoveFilesDefault(configuration types.Configuration) {
+	for key, paths := range configuration.Default {
+		files := ReadFilesFromSrcDir(paths.SrcDir)
+		for _, file := range files {
+			BuildDstFilePath(file, paths, key)
+		}
 	}
 }
