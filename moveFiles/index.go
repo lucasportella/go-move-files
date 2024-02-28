@@ -10,7 +10,7 @@ import (
 	"github.com/lucasportella/go-move-files/utils"
 )
 
-func GetPaths() types.Paths {
+func GetPaths() types.Configuration {
 	paths, err := utils.ReadJSONFile()
 	if err != nil {
 		log.Fatal(err)
@@ -18,17 +18,14 @@ func GetPaths() types.Paths {
 	return paths
 }
 
-func MoveFiles(paths types.Paths) {
-	for level1Key, level2Map := range paths {
-		for level2Key, level3Map := range level2Map {
-			switch level1Key {
-			case "default":
-				MoveFilesDefault(level2Key, level3Map)
-			case "withDate":
-				MoveFilesWithDate(level2Key, level3Map)
-			}
-		}
+func MoveFiles(configuration types.Configuration) {
+	for key, paths := range configuration.Default {
+		MoveFilesDefault(key, paths)
 	}
+
+		MoveFilesWithDate(configuration)
+
+
 }
 
 func ReadFilesFromSrcDir(srcPath string) []fs.DirEntry {
@@ -56,5 +53,6 @@ func DeleteFile(filePath string) {
 
 func MoveFile(dstFile *os.File, srcFile *os.File) error {
 	_, err := io.Copy(dstFile, srcFile)
+	//fix: add delete fn here
 	return err
 }
