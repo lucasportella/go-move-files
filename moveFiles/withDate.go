@@ -48,6 +48,10 @@ func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string) (str
 	return newPathWithDate, nil
 }
 
+func MoveFilesDateOption() {
+
+}
+
 func MoveFilesWithDate(configuration types.Configuration) {
 	datePaths := configuration.WithDate
 	// for key, paths := range datePaths.WithDateDaily {
@@ -56,20 +60,24 @@ func MoveFilesWithDate(configuration types.Configuration) {
 	// }
 
 	for key, paths := range datePaths.WithDateMonthly {
-		srcPath := paths.SrcDir
-		srcDir := ReadFilesFromSrcDir(srcPath)
+
+		srcDir := ReadFilesFromSrcDir(paths.SrcDir)
 		for _, file := range srcDir {
-			dstPath := paths.DstDir
-			newPathWithDate, err := BuildNewPathWithDate(file, srcPath, dstPath)
+			if !FileNameContainsKey(file.Name(), key) {
+				continue
+			}
+
+			newPathWithDate, err := BuildNewPathWithDate(file, paths.SrcDir, paths.DstDir)
 			if err != nil {
 				log.Println(err)
 				continue
 			}
-			updatedPaths := types.Paths{
-				SrcDir: srcPath,
-				DstDir: newPathWithDate,
+			err = MkdirNewFolders(file, newPathWithDate, key)
+			if err != nil {
+				log.Println(err)
+				continue
 			}
-			BuildDstFilePath(file, updatedPaths, key)
+			MoveFile(newPathWithDate, paths.SrcDir, file.Name())
 		}
 
 	}
