@@ -77,7 +77,7 @@ func MoveFilesWithDate(configuration types.Configuration) {
 				log.Println(err)
 				continue
 			}
-			MoveFile(paths.SrcDir, newPathWithDate+"/"+file.Name())
+			MoveFile(newPathWithDate, paths.SrcDir, file.Name())
 		}
 
 	}

@@ -1,6 +1,8 @@
 package movefiles
 
 import (
+	"log"
+
 	"github.com/lucasportella/go-move-files/types"
 )
 
@@ -13,9 +15,10 @@ func MoveFilesDefault(configuration types.Configuration) {
 			}
 			err := MkdirNewFolders(file, paths.DstDir, key)
 			if err != nil {
+				log.Println(err)
 				continue
 			}
-			MoveFile(paths.SrcDir, paths.DstDir)
+			MoveFile(paths.DstDir, paths.SrcDir, file.Name())
 		}
 	}
 }

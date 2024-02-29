@@ -54,15 +54,16 @@ func DeleteFile(filePath string) {
 	}
 }
 
-func MoveFile(newFilePath string, srcPath string) {
-	dstFile, err := os.Open(newFilePath)
+func MoveFile(dstPath string, srcPath string, fileName string) {
+	oldFilePath := srcPath + "/" + fileName
+	newFilePath := dstPath + "/" + fileName
+
+	dstFile, err := os.Create(newFilePath)
 	if err != nil {
 		log.Printf("could not open file %v. Skipping to next file", newFilePath)
 	}
 	defer dstFile.Close()
 
-	formattedFileName := strings.ToLower(dstFile.Name())
-	oldFilePath := srcPath + "/" + formattedFileName
 	srcFile, err := os.Open(oldFilePath)
 	if err != nil {
 		log.Printf("Error while opening the file using the old path. Path: %v", oldFilePath)
@@ -72,7 +73,7 @@ func MoveFile(newFilePath string, srcPath string) {
 	_, err = io.Copy(dstFile, srcFile)
 	if err != nil {
 		dstFile.Close()
-		DeleteFile(newFilePath)
+		DeleteFile(dstPath)
 	} else {
 		srcFile.Close()
 		DeleteFile(oldFilePath)
