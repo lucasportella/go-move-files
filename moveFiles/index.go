@@ -1,6 +1,7 @@
 package movefiles
 
 import (
+	"fmt"
 	"io"
 	"io/fs"
 	"log"
@@ -32,34 +33,16 @@ func ReadFilesFromSrcDir(srcPath string) []fs.DirEntry {
 	return files
 }
 
-func BuildDstFilePath(file fs.DirEntry, paths types.Paths, key string) error {
-	srcPath := paths.SrcDir
-	dstPath := paths.DstDir
-	formattedFileName := strings.ToLower(file.Name())
-	formattedKey := strings.ToLower(key)
-	oldFilePath := srcPath + "/" + formattedFileName
+func FileNameContainsKey(fileName string, key string) bool {
+	return strings.Contains(fileName, key)
+}
 
-	//openFile in the src dir
-	srcFile, err := os.Open(oldFilePath)
-	if err != nil {
-		log.Printf("Error while opening the file using the old path. Path: %v", oldFilePath)
-	}
-	defer srcFile.Close()
-
-	// create file in dst dir if file matches the key
-	newFilePath := dstPath + "/" + formattedFileName
-	if strings.Contains(formattedFileName, formattedKey) {
-		if !PathExists(dstPath) {
-			CreateFolders(dstPath)
-		}
-		dstFile, err := os.Create(newFilePath)
+func MkdirNewFolders(file fs.DirEntry, dstPath string, key string) error {
+	if !PathExists(dstPath) {
+		err := CreateFolders(dstPath)
 		if err != nil {
-			log.Printf("Error while creating file in destiny folder: %v\n", err)
-			return err
+			return fmt.Errorf("error while creating destiny folders: %v", err)
 		}
-		defer dstFile.Close()
-
-		MoveFile(dstFile, srcFile, oldFilePath, newFilePath)
 	}
 	return nil
 }
@@ -71,16 +54,36 @@ func DeleteFile(filePath string) {
 	}
 }
 
-func MoveFile(dstFile *os.File, srcFile *os.File, oldFilePath string, newFilePath string) error {
-	_, err := io.Copy(dstFile, srcFile)
-	srcFile.Close()
-	dstFile.Close()
+func MoveFile(newFilePath string, srcPath string) {
+	dstFile, err := os.Open(newFilePath)
 	if err != nil {
+		log.Printf("could not open file %v. Skipping to next file", newFilePath)
+	}
+	defer dstFile.Close()
+
+	formattedFileName := strings.ToLower(dstFile.Name())
+	oldFilePath := srcPath + "/" + formattedFileName
+	srcFile, err := os.Open(oldFilePath)
+	if err != nil {
+		log.Printf("Error while opening the file using the old path. Path: %v", oldFilePath)
+	}
+	defer srcFile.Close()
+
+	_, err = io.Copy(dstFile, srcFile)
+	if err != nil {
+		dstFile.Close()
 		DeleteFile(newFilePath)
 	} else {
+		srcFile.Close()
 		DeleteFile(oldFilePath)
 	}
-	return err
+
+	if err != nil {
+		log.Printf("error while moving file: %v", err)
+	} else {
+		log.Printf("file %v moved to %v with success!", srcPath, newFilePath)
+	}
+
 }
 
 func PathExists(path string) bool {
