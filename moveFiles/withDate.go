@@ -31,7 +31,7 @@ func GetNewPathWithDate(path string, dateConfig types.DateValues) string {
 	return newPathWithDate
 }
 
-func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string) (string, error) {
+func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string, dateOption string) (string, error) {
 	oldFilePath := srcPath + "/" + file.Name()
 	fileDate, err := GetFileDate(oldFilePath)
 	if err != nil {
@@ -39,7 +39,7 @@ func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string) (str
 		return "", err
 	}
 	defaultDateConfig := GetDateConfig(fileDate)
-	dateConfig, err := SetDateConfig(defaultDateConfig, "monthly")
+	dateConfig, err := SetDateConfig(defaultDateConfig, types.DateOption(dateOption))
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -48,26 +48,15 @@ func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string) (str
 	return newPathWithDate, nil
 }
 
-func MoveFilesDateOption() {
-
-}
-
-func MoveFilesWithDate(configuration types.Configuration) {
-	datePaths := configuration.WithDate
-	// for key, paths := range datePaths.WithDateDaily {
-	// 	srcPath := paths.SrcDir
-	// 	dstpath := paths.DstDir
-	// }
-
-	for key, paths := range datePaths.WithDateMonthly {
-
+func MoveFilesDateOption(option map[string]types.Paths, dateOption string) {
+	for key, paths := range option {
 		srcDir := ReadFilesFromSrcDir(paths.SrcDir)
 		for _, file := range srcDir {
 			if !FileNameContainsKey(file.Name(), key) {
 				continue
 			}
 
-			newPathWithDate, err := BuildNewPathWithDate(file, paths.SrcDir, paths.DstDir)
+			newPathWithDate, err := BuildNewPathWithDate(file, paths.SrcDir, paths.DstDir, dateOption)
 			if err != nil {
 				log.Println(err)
 				continue
@@ -81,32 +70,12 @@ func MoveFilesWithDate(configuration types.Configuration) {
 		}
 
 	}
+}
 
-	// for key, paths := range datePaths.WithDateYearly {
-	// 	srcPath := paths.SrcDir
-	// 	dstpath := paths.DstDir
-	// }
-
-	// srcDir := ReadFilesFromSrcDir(srcPath)
-
-	// for _, dateOption := range dateOptions {
-
-	// }
-
-	// for _, file := range dateOption {
-	// 	//openFile in the src dir
-	// 	oldFilePath := srcPath + "/" + file.Name()
-	// 	fileInfo, err := GetFileDate(oldFilePath)
-	// 	if err != nil {
-	// 		continue
-	// 	}
-	// 	fmt.Println(fileInfo)
-	// 	_, err = OpenFile(oldFilePath)
-	// 	if err != nil {
-	// 		log.Printf("Error while opening the file using the old path. Path: %v", oldFilePath)
-	// 	}
-
-	// }
+func MoveFilesWithDate(configuration types.Configuration) {
+	MoveFilesDateOption(configuration.WithDate.WithDateYearly, types.Yearly)
+	MoveFilesDateOption(configuration.WithDate.WithDateMonthly, types.Monthly)
+	MoveFilesDateOption(configuration.WithDate.WithDateDaily, types.Daily)
 }
 
 // GetFileDate gets the date of the file and returns a string in the format YYYY-MM-DD
