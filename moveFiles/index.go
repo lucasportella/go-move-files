@@ -5,10 +5,16 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/lucasportella/go-move-files/types"
 	"github.com/lucasportella/go-move-files/utils"
 )
+
+func MoveFiles(configuration types.Configuration) {
+	MoveFilesDefault(configuration)
+	MoveFilesWithDate(configuration)
+}
 
 func GetPaths() types.Configuration {
 	paths, err := utils.ReadJSONFile()
@@ -16,11 +22,6 @@ func GetPaths() types.Configuration {
 		log.Fatal(err)
 	}
 	return paths
-}
-
-func MoveFiles(configuration types.Configuration) {
-	MoveFilesDefault(configuration)
-	MoveFilesWithDate(configuration)
 }
 
 func ReadFilesFromSrcDir(srcPath string) []fs.DirEntry {
@@ -31,12 +32,36 @@ func ReadFilesFromSrcDir(srcPath string) []fs.DirEntry {
 	return files
 }
 
-func OpenFile(filePath string) (*os.File, error) {
-	file, err := os.Open(filePath)
+func BuildDstFilePath(file fs.DirEntry, paths types.Paths, key string) error {
+	srcPath := paths.SrcDir
+	dstPath := paths.DstDir
+	formattedFileName := strings.ToLower(file.Name())
+	formattedKey := strings.ToLower(key)
+	oldFilePath := srcPath + "/" + formattedFileName
+
+	//openFile in the src dir
+	srcFile, err := os.Open(oldFilePath)
 	if err != nil {
-		return nil, err
+		log.Printf("Error while opening the file using the old path. Path: %v", oldFilePath)
 	}
-	return file, nil
+	defer srcFile.Close()
+
+	// create file in dst dir if file matches the key
+	newFilePath := dstPath + "/" + formattedFileName
+	if strings.Contains(formattedFileName, formattedKey) {
+		if !PathExists(dstPath) {
+			CreateFolders(dstPath)
+		}
+		dstFile, err := os.Create(newFilePath)
+		if err != nil {
+			log.Printf("Error while creating file in destiny folder: %v\n", err)
+			return err
+		}
+		defer dstFile.Close()
+
+		MoveFile(dstFile, srcFile, oldFilePath, newFilePath)
+	}
+	return nil
 }
 
 func DeleteFile(filePath string) {
@@ -46,9 +71,15 @@ func DeleteFile(filePath string) {
 	}
 }
 
-func MoveFile(dstFile *os.File, srcFile *os.File) error {
+func MoveFile(dstFile *os.File, srcFile *os.File, oldFilePath string, newFilePath string) error {
 	_, err := io.Copy(dstFile, srcFile)
-	//fix: add delete fn here
+	srcFile.Close()
+	dstFile.Close()
+	if err != nil {
+		DeleteFile(newFilePath)
+	} else {
+		DeleteFile(oldFilePath)
+	}
 	return err
 }
 

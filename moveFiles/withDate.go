@@ -114,7 +114,7 @@ func GetFileDate(path string) (string, error) {
 
 func GetDatePaths(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := CreateDateFolders(path)
+		err := CreateFolders(path)
 		if err != nil {
 			return fmt.Errorf("failed to create folder(s): %v", err)
 		}
@@ -124,9 +124,7 @@ func GetDatePaths(path string) error {
 	return nil
 }
 
-
-
-func CreateDateFolders(path string) error {
+func CreateFolders(path string) error {
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
 		return err
