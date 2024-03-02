@@ -18,9 +18,9 @@ func TestPathExists(t *testing.T) {
 		t.Fatalf("Setup failed: %v", err)
 	}
 	pathsData := []PathData{
-		{path: filepath.Join(projectRoot, "test", "src"), result: true},
-		{path: filepath.Join(projectRoot, "test", "dst"), result: true},
-		{path: filepath.Join(projectRoot, "test", "notExistPath"), result: false},
+		{path: filepath.Join(projectRoot, "testTemp", "src"), result: true},
+		{path: filepath.Join(projectRoot, "testTemp", "dst"), result: true},
+		{path: filepath.Join(projectRoot, "testTemp", "notExistPath"), result: false},
 	}
 	for _, data := range pathsData {
 		result := PathExists(data.path)
