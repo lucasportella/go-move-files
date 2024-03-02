@@ -1,0 +1,35 @@
+{
+  "default": {
+    "book#": {
+      "src_dir": "./test/src",
+      "dst_dir": "./test/dst"
+    },
+    "music#": {
+      "src_dir": "./test/src",
+      "dst_dir": "./test/dst"
+    },
+    "picture#": {
+      "src_dir": "./test/src",
+      "dst_dir": "./test/dst"
+    }
+  },
+  "withDate": {
+    "withDateDaily": {},
+    "withDateMonthly": {
+      "bill#": {
+        "src_dir": "./test/src",
+        "dst_dir": "./test/dst"
+      },
+      "doc#": {
+        "src_dir": "./test/src",
+        "dst_dir": "./test/dst"
+      }
+    },
+    "withDateYearly": {
+      "taxes#": {
+        "src_dir": "./test/src",
+        "dst_dir": "./test/dst"
+      }
+    }
+  }
+}

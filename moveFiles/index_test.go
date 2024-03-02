@@ -1,6 +1,11 @@
 package movefiles
 
-import "testing"
+import (
+	"path/filepath"
+	"testing"
+
+	"github.com/lucasportella/go-move-files/test"
+)
 
 type PathData struct {
 	path   string
@@ -8,14 +13,23 @@ type PathData struct {
 }
 
 func TestPathExists(t *testing.T) {
+	projectRoot, err := test.Setup()
+	if err != nil {
+		t.Fatalf("Setup failed: %v", err)
+	}
 	pathsData := []PathData{
-		{path: "C:/Users/lucas/Pictures/", result: true},
-		{path: "C:/Users/lucas/Videos/jpwnnpngiewahns", result: false},
+		{path: filepath.Join(projectRoot, "test", "src"), result: true},
+		{path: filepath.Join(projectRoot, "test", "dst"), result: true},
+		{path: filepath.Join(projectRoot, "test", "notExistPath"), result: false},
 	}
 	for _, data := range pathsData {
 		result := PathExists(data.path)
 		if data.result != result {
 			t.Errorf("Expected %v, got: %v", data.result, result)
 		}
+	}
+	err = test.Teardown()
+	if err != nil {
+		t.Fatalf("Teardown failed: %v", err)
 	}
 }
