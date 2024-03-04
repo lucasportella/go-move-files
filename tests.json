@@ -26,7 +26,7 @@
       }
     },
     "withDateYearly": {
-      "taxes#": {
+      "tax#": {
         "src_dir": "./test/src",
         "dst_dir": "./test/dst"
       }
