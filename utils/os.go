@@ -13,9 +13,7 @@ func GetUserOS() string {
 	return runtime.GOOS
 }
 
-func ReadJSONFile() (types.Configuration, error) {
-	filePath := "paths.json"
-
+func ReadJSONFile(filePath string) (types.Configuration, error) {
 	jsonPaths, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Fatalf("Error reading the JSON file: %v", err)
