@@ -18,7 +18,7 @@ func MoveFiles(configuration types.Configuration) {
 }
 
 func GetPaths() types.Configuration {
-	paths, err := utils.ReadJSONFile()
+	paths, err := utils.ReadJSONFile("paths.json")
 	if err != nil {
 		log.Fatal(err)
 	}
