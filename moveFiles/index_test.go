@@ -17,6 +17,8 @@ func TestPathExists(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Setup failed: %v", err)
 	}
+	defer test.Teardown()
+
 	pathsData := []PathData{
 		{path: filepath.Join(projectRoot, "testTemp", "src"), result: true},
 		{path: filepath.Join(projectRoot, "testTemp", "dst"), result: true},
@@ -28,8 +30,5 @@ func TestPathExists(t *testing.T) {
 			t.Errorf("Expected %v, got: %v", data.result, result)
 		}
 	}
-	err = test.Teardown()
-	if err != nil {
-		t.Fatalf("Teardown failed: %v", err)
-	}
+
 }

@@ -56,17 +56,22 @@ func Setup() (string, error) {
 	return projectRoot, nil
 }
 
-func Teardown() error {
+func Teardown() {
 	projectRoot, err := FindProjectRoot()
-	testTempDir := filepath.Join(projectRoot, "testTemp")
 	if err != nil {
-		return err
+		fmt.Printf("error while trying to find project root: %v\n", err)
+		fmt.Println("Teardown failed")
+		return
 	}
+
+	testTempDir := filepath.Join(projectRoot, "testTemp")
+
 	err = os.RemoveAll(testTempDir)
 	if err != nil {
 		fmt.Printf("error removing directory %s: %v\n", testTempDir, err)
+		fmt.Println("Teardown failed")
+		return
 	}
-	return nil
 }
 
 func FindProjectRoot() (string, error) {
