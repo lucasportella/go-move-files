@@ -21,7 +21,7 @@ roadmap:
 
 ### How to use
 - 1 create a JSON file named *paths.json* and follow the example of *paths-example.json*
-- 2 change de keys #book, #music, #picture, #bill, #doc etc to the key that will be in your file name, in the example, any filename with #book will go to the book path, any filename with #bill will got to the bill path + /current_year/current_month see options below
+- 2 change the keys #book, #music, #picture, #bill, #doc etc to the keys that will be in your filename, In the *paths-example.json* any filename with #book will go to the book path, any filename with #bill will got to the bill path + /current_year/current_month
 
 ### Options:
 - 1 **Default**: Simply move file x to destination y.
