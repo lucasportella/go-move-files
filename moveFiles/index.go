@@ -25,14 +25,6 @@ func GetPaths() types.Configuration {
 	return paths
 }
 
-func ReadFilesFromSrcDir(srcPath string) []fs.DirEntry {
-	files, err := os.ReadDir(srcPath)
-	if err != nil {
-		log.Fatalf("Fatal! Could not read source directory. Error: %v\n", err)
-	}
-	return files
-}
-
 func FileNameContainsKey(fileName string, key string) bool {
 	return strings.Contains(fileName, key)
 }

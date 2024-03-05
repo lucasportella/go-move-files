@@ -2,13 +2,19 @@ package movefiles
 
 import (
 	"log"
+	"os"
 
 	"github.com/lucasportella/go-move-files/types"
 )
 
 func MoveFilesDefault(configuration types.Configuration) {
 	for key, paths := range configuration.Default {
-		files := ReadFilesFromSrcDir(paths.SrcDir)
+
+		files, err := os.ReadDir(paths.SrcDir)
+		if err != nil {
+			log.Fatalf("Fatal! Could not read source directory. Error: %v\n", err)
+		}
+
 		for _, file := range files {
 			if !FileNameContainsKey(file.Name(), key) {
 				continue

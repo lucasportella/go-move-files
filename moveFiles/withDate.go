@@ -50,7 +50,12 @@ func BuildNewPathWithDate(file fs.DirEntry, srcPath string, dstPath string, date
 
 func MoveFilesDateOption(option map[string]types.Paths, dateOption string) {
 	for key, paths := range option {
-		srcDir := ReadFilesFromSrcDir(paths.SrcDir)
+
+		srcDir, err := os.ReadDir(paths.SrcDir)
+		if err != nil {
+			log.Fatalf("Fatal! Could not read source directory. Error: %v\n", err)
+		}
+
 		for _, file := range srcDir {
 			if !FileNameContainsKey(file.Name(), key) {
 				continue

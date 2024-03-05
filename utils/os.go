@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"runtime"
@@ -16,13 +17,15 @@ func GetUserOS() string {
 func ReadJSONFile(filePath string) (types.Configuration, error) {
 	jsonPaths, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("Error reading the JSON file: %v", err)
+		log.Printf("error reading the JSON file: %v", err)
+		return types.Configuration{}, fmt.Errorf("error reading the JSON file: %v", err)
 	}
 
 	var paths types.Configuration
 	err = json.Unmarshal(jsonPaths, &paths)
 	if err != nil {
-		log.Fatalf("Error parsing JSON file: %v", err)
+		log.Printf("error parsing JSON file: %v", err)
+		return types.Configuration{}, fmt.Errorf("error parsing the JSON file: %v", err)
 	}
 	return paths, err
 }
