@@ -1,7 +1,7 @@
 # Go Auto Move Files
 ## Automation for organizing files and folders in the user OS.
 
-This is a on going project,
+This is an on going project,
 roadmap:
 *add interfaces*
 *tests*
