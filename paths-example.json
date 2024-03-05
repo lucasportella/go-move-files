@@ -26,9 +26,5 @@
       "src_dir": "C:/Users/john/Pictures",
       "dst_dir": "C:/Users/john/Videos"
     }
-  },
-  "delete": {
-    "src_dir": "C:/Users/john/Downloads"
   }
-
 }
