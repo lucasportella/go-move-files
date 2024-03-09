@@ -38,3 +38,15 @@ func BenchmarkPathExists(b *testing.B) {
 		PathExists("../main.go")
 	}
 }
+
+func TestFileNameContainsKey(t *testing.T) {
+	result := FileNameContainsKey("book#batman", "book#")
+	if result != true {
+		t.Errorf("Expected true, got false.")
+	}
+
+	result = FileNameContainsKey("book", "book#")
+	if result != false {
+		t.Errorf("Expected false, got true")
+	}
+}
