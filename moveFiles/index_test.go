@@ -32,3 +32,9 @@ func TestPathExists(t *testing.T) {
 	}
 
 }
+
+func BenchmarkPathExists(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		PathExists("../main.go")
+	}
+}
