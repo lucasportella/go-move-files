@@ -2,7 +2,9 @@
 ## Automation for organizing files and folders in the user OS.
 
 This is an on going project,
+
 roadmap:
+*overwrite policy*
 *add interfaces*
 *tests*
 *support to folders*
