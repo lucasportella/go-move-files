@@ -1,14 +1,12 @@
 # Go Auto Move Files
 ## Automation for organizing files and folders in the user OS.
 
-This is an on going project,
-
-roadmap:
-*overwrite policy*
-*add interfaces*
-*tests*
-*support to folders*
-*add retry operations*
+This is an on going project, roadmap:\
+*overwrite policy*\
+*add interfaces*\
+*tests*\
+*support to folders*\
+*add retry operations*\
 *add automated service to run project example*
 
 ### The Problem
